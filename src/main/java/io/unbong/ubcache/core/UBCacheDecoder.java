@@ -1,4 +1,4 @@
-package io.unbong.ubcache;
+package io.unbong.ubcache.core;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

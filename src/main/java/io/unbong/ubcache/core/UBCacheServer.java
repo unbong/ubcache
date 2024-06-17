@@ -1,4 +1,4 @@
-package io.unbong.ubcache;
+package io.unbong.ubcache.core;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -10,11 +10,10 @@ import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.redis.RedisDecoder;
-import io.netty.handler.codec.redis.RedisEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.unbong.ubcache.UBplugin;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Component;
  * 2024-06-15 19:53
  */
 @Component
-public class UBCacheServer implements UBplugin{
+public class UBCacheServer implements UBplugin {
 
 
     EventLoopGroup bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("redis-boss"));
