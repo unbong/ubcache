@@ -1,0 +1,7 @@
+logging:
+    level:
+        io:
+            unbong: debug
+spring:
+    application:
+        name: ubcache
