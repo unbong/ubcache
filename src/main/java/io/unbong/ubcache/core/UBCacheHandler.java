@@ -27,111 +27,30 @@ public class UBCacheHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String message) throws Exception {
 
-
         String[] args = message.split(CRLF);
         log.debug("UBCacheHandler: {}", String.join(",", args));
         String cmd = args[2].toUpperCase();
 
         Command command = Commands.get(cmd);
         if(command != null){
-            Reply<?> reply = command.exec(cache, args);
-            replyContext(ctx, reply);
+            try
+            {
+                Reply<?> reply = command.exec(cache, args);
+                log.debug("cmd {} -> {} -> {} ", cmd, reply.getType(), reply.getValue());
+                replyContext(ctx, reply);
+            }
+            catch (Exception e)
+            {
+                Reply<?> reply = Reply.error("EXP exception with msg. " + e.getMessage());
+                replyContext(ctx, reply);
+            }
+
         }
         else{
             Reply<?> reply = Reply.error("ERR unsupportted command");
+            replyContext(ctx, reply);
         }
 
-//        if("COMMAND".equals(cmd))
-//        {
-//            writeByteBuf(ctx, "*2" +
-//                    CRLF+"$7" +
-//                    CRLF + "COMMAND" +
-//                    CRLF+ "$4"+
-//                    CRLF+ "PING"  + CRLF);
-//        }
-//        else if("PING".equals(cmd))
-//        {
-//            String ret = "PONG";
-//            if(args.length >=5)
-//                ret = args[4];
-//            simpleString(ctx,ret);
-//        }
-//        else if ("INFO".equals(cmd))
-//        {
-//            bulkString(ctx, INFO);
-//        }
-//        else if("SET".equals(cmd))
-//        {
-//            cache.set(args[4], args[6]);
-//            simpleString(ctx,OK);
-//        } else if ("GET".equals(cmd)) {
-//            String value = cache.get(args[4]);
-//            bulkString(ctx, value);
-//        } else if ("STRLEN".equals(cmd)) {
-//            String value = cache.get(args[4]);
-//            integer(ctx, value == null?0:value.length());
-//        } else if ("DEL".equals(cmd)) {
-//            int len = (args.length-3)/2;
-//            String[] keys = new String[len];
-//            for(int i = 0; i < len; i++)
-//            {
-//                keys[i] = args[4+i*2];
-//            }
-//            int del = cache.del(keys);
-//            integer(ctx, del);
-//        } else if ("EXISTS".equals(cmd)) {
-//            int len = (args.length-3)/2;
-//            String[] keys = new String[len];
-//            for(int i = 0; i < len; i++)
-//            {
-//                keys[i] = args[4+i*2];
-//            }
-//            int exists = cache.exists(keys);
-//            integer(ctx, exists);
-//        } else if ("MGET".equals(cmd)) {
-//            int len = (args.length-3)/2;
-//            String[] keys = new String[len];
-//            for(int i = 0; i < len; i++)
-//            {
-//                keys[i] = args[4+i*2];
-//            }
-//
-//            String[] array = cache.mget(keys);
-//            array(ctx, array);
-//
-//        }else if ("MSET".equals(cmd)) {
-//            int len = (args.length-3)/4;
-//            String[] keys = new String[len];
-//            String[] values = new String[len];
-//
-//            for(int i = 0; i < len; i++)
-//            {
-//                keys[i] = args[4+i*4];
-//                values[i] = args[6+i*4];
-//            }
-//            cache.mset(keys, values);
-//            simpleString(ctx, OK);
-//        } else if ("INCR".equals(cmd)) {
-//            String key = args[4];
-//            try{
-//                integer(ctx, cache.incr(key));
-//            }
-//            catch (NumberFormatException nfe)
-//            {
-//                error(ctx, "NFE " + key + " value is not integer" );
-//            }
-//        } else if ("DECR".equals(cmd)) {
-//            String key = args[4];
-//            try{
-//                integer(ctx, cache.decr(key));
-//            }
-//            catch (NumberFormatException nfe)
-//            {
-//                error(ctx, "NFE " + key + " value is not integer" );
-//            }
-//        }  else{
-//            simpleString(ctx, OK);
-//        }
     }
 
     private void replyContext(ChannelHandlerContext ctx, Reply<?> reply) {
@@ -165,29 +84,17 @@ public class UBCacheHandler extends SimpleChannelInboundHandler<String> {
     private String errorEncode (String msg) {
         return "-" + msg + CRLF;
     }
-    private void integer(ChannelHandlerContext ctx, int i) {
+    private void integer(ChannelHandlerContext ctx, Integer i) {
         writeByteBuf(ctx, integerEncode(i));
 
     }
 
-    private  String integerEncode(int i) {
+    private  String integerEncode(Integer i) {
+        if (i == null) return "$-1" + CRLF;
         return ":" + i+ CRLF;
     }
 
 
-//    *2
-//    $3
-//            set
-//    $1
-//            s
-
-
-
-//    *2
-//    $3
-//            get
-//    $1
-//            s
     private void bulkString(ChannelHandlerContext ctx, String content)
     {
         String ret = bulkStringEncode(content );

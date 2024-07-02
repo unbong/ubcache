@@ -13,7 +13,7 @@ import io.unbong.ubcache.core.UBCache;
 public class MSetCommand implements Command {
     @Override
     public String name() {
-        return "SET";
+        return "MSET";
     }
 
     @Override

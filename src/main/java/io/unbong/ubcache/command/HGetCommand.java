@@ -5,22 +5,23 @@ import io.unbong.ubcache.core.Reply;
 import io.unbong.ubcache.core.UBCache;
 
 /**
- * Description
+ * HGET
  *
  * @author <a href="ecunbong@gmail.com">unbong</a>
  * 2024-06-19 21:15
  */
-public class MGetCommand implements Command {
+public class HGetCommand implements Command {
     @Override
     public String name() {
-        return "MGET";
+        return "HGET";
     }
 
     @Override
     public Reply<?> exec(UBCache cache, String[] args) {
 
-        String[] keys = getParams(args);
-        String[] values = cache.mget(keys);
-        return Reply.array(values);
+        String key = getKey(args);
+        String hkey = getValue(args);
+
+        return Reply.bulkString(cache.hget(key,hkey));
     }
 }

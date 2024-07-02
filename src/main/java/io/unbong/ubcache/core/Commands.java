@@ -35,17 +35,44 @@ public class Commands {
         register(new DecrCommand());
         register(new MGetCommand());
         register(new MSetCommand());
-        register(new LPushCommand());
-        register(new LPopCommand());
+
         register(new RPushCommand());
         register(new RPopCommand());
-        register(new LLenCommand());
-        register(new LIndexCommand());
-        register(new LRangeCommand());
 
         // list
         // lpush rpush lpop rpop llen lindex lrange
         register(new LPushCommand());
+        register(new LPopCommand());
+        register(new LLenCommand());
+        register(new LIndexCommand());
+        register(new LRangeCommand());
+
+        // set
+        register(new SAddCommand());
+        register(new SMembersCommand());
+        register(new SRemoveCommand());
+        register(new SCardCommand());
+        register(new SPopCommand());
+        register(new SisMemberCommand());
+
+        // hash
+        register(new HSetCommand());
+        register(new HGetCommand());
+        register(new HGetALLCommand());
+        register(new HLenCommand());
+        register(new HExistCommand());
+        register(new HDelCommand());
+        register(new HMGetCommand());
+
+        // zset
+
+        register(new ZAddCommand());
+        register(new ZCardCommand());
+        register(new ZScoreCommand());
+        register(new ZRemoveCommand());
+        register(new ZRankCommand());
+        register(new ZCountCommand());
+
 
     }
 
